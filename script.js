@@ -4,28 +4,26 @@ const result = document.getElementById("result");
 const sound = document.getElementById("sound");
 const btn = document.getElementById("search-btn");
 
-
 btn.addEventListener("click", async () => {
-  let inputWord = document.getElementById("input-box").value;
-  inputWord = inputWord.trim();
+  let inputWord = document.getElementById("input-box").value.trim();
+  if (!inputWord) {
+    result.innerHTML = '<h3 class="error">Please enter a word</h3>';
+    return;
+  }
 
   try {
     const response = await fetch(`${url}${inputWord}`);
     const data = await response.json();
-    let audioSrc = "";
-
-    console.log(assignSrc(data[0].phonetics,audio));
+    let audioSrc = "", definitionSrc = "", exampleSrc = "";
 
     data[0].phonetics.map((data) => {
       audioSrc ||= data.audio;
     });
-    
-    let definitionSrc = "", exampleSrc = "";
+
     data[0].meanings[0].definitions.map((data) => {
       definitionSrc ||= data.definition;
-      exampleSrc ||= data.example;    
+      exampleSrc ||= data.example;
     });
-
 
     result.innerHTML = `<div class="word">
           <h3>${inputWord}</h3>
